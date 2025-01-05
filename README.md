@@ -29,10 +29,10 @@ pip install -r requirements.txt
 3. Configurez le fichier `config.json` avec vos tokens et paramètres :
 ```json
 {
-"DISCORD_TOKEN": "votre_token_discord",
-"LOGGER_BOT_TOKEN": "token_du_bot_logger",
-"CEREBRAS_API_KEY": "votre_clé_api_cerebras",
-"dev_ids": ["votre_id_discord"],
+"DISCORD_TOKEN": "TOKEN DISCORD PRINCIPAL",
+"LOGGER_BOT_TOKEN": "TOKEN DISCORD LOGGING",
+"CEREBRAS_API_KEY": "CLE API CEREBRAS",
+"dev_ids": ["ID DISCORD"],
 "LOG_LEVEL": "DEBUG"
 }
 ```
