@@ -32,7 +32,8 @@ pip install -r requirements.txt
 "DISCORD_TOKEN": "votre_token_discord",
 "LOGGER_BOT_TOKEN": "token_du_bot_logger",
 "CEREBRAS_API_KEY": "votre_clé_api_cerebras",
-"dev_ids": ["votre_id_discord"]
+"dev_ids": ["votre_id_discord"],
+"LOG_LEVEL": "DEBUG"
 }
 ```
 ## Utilisation
@@ -41,13 +42,19 @@ Lancez le bot avec la commande :
 ```shell
 python bot.py
 ```
+
 ## Commandes disponibles
 
+### Bot principal
 - `/ping` : Affiche la latence du bot
 - `/infos` : Montre les informations sur le bot
 - `/help` : Liste les commandes disponibles
 - `/image` : Génère une image à partir d'un prompt
 - `/contact` : Envoie un message au développeur
+
+### Bot de logging
+- `/logging-level` : Définit le niveau de log
+- `/log-status` : Affiche le statut actuel du logger
 
 ## Structure du projet
 
@@ -56,6 +63,7 @@ python bot.py
 - `commands.py` : Définition des commandes slash
 - `pollinations.py` : Interface avec l'API Pollinations pour la génération d'images
 - `logger_bot.py` : Bot de logging
+- `logger_commands.py` : Commandes spécifiques au bot de logging
 
 ## Contribution
 
@@ -63,5 +71,4 @@ Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou à
 
 ## Licence
 
-[License MIT](https://github.com/YoannDev90/AlphaLLM-v2/blob/main/LICENSE)
-
+[License MIT](LICENSE)
