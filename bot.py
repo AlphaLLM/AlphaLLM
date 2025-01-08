@@ -9,7 +9,7 @@ import discord
 from discord.ext import commands
 from commands import setup_commands
 import logging
-from cerb_api import cerebras_response
+from cerebras_api import cerebras_response
 import json
 import asyncio
 from logger_bot import LoggerBot, DiscordHandler

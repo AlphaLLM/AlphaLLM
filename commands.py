@@ -1,6 +1,6 @@
 import discord
 from discord import app_commands
-from cerb_api import cerebras_response
+from cerebras_api import cerebras_response
 from pollinations import generate_image
 from discord import File
 from io import BytesIO
@@ -60,8 +60,12 @@ def setup_commands(bot: discord.Client):
         enhance: bool = False,
         safe: bool = False
     ):
-        logger.info(f"Commande image exécutée par {interaction.user} avec prompt: {prompt}")
-        await interaction.response.defer()
+        logger.info(f"Commande image exécutée par {interaction.user} avec : \nprompt: {prompt}\nmodèle: {model} \nseed: {seed} \ndimensions: {width}x{height} \nenhance: {enhance} \nsafe: {safe}")
+        if width > 2048 or height > 2048:
+            await interaction.response.send_message("Les dimensions de l'image doivent être inférieures ou égales à 2048x2048.")
+            logger.error(f"Dimensions de l'image trop grandes pour {interaction.user}")
+            return
+        
         image_data = await generate_image(prompt, model, seed, width, height, nologo, private, enhance, safe)
         if image_data:
             file = discord.File(BytesIO(image_data), filename="generated_image.png")
