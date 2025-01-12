@@ -62,7 +62,7 @@ logger_bot = LoggerBot()
 discord_handler = DiscordHandler(logger_bot)
 discord_handler.setLevel(logging.DEBUG)
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('discord_bot')
 logger.addHandler(discord_handler)
 

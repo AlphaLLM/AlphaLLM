@@ -7,6 +7,7 @@ Il configure le logging, définit les événements du bot et gère l'exécution 
 
 import discord
 from discord.ext import commands
+from discord.ext import tasks
 from commands import setup_commands
 import logging
 from cerebras_api import cerebras_response
@@ -17,7 +18,7 @@ import re
 
 # Configuration du logging
 logger = logging.getLogger('discord_bot')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 # Handler pour la console
 console_handler = logging.StreamHandler()
@@ -29,7 +30,7 @@ logger.addHandler(console_handler)
 # Handler pour Discord
 logger_bot = LoggerBot()
 discord_handler = DiscordHandler(logger_bot)
-discord_handler.setLevel(logging.DEBUG)
+discord_handler.setLevel(logging.INFO)
 logger.addHandler(discord_handler)
 
 # Chargement des intents et configuration du bot
@@ -42,7 +43,31 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 
 # Statut Discord modifiable
-STATUS = "/help pour les commandes"
+
+STATUSES = [
+    "/help pour les commandes",
+    "@AlphaLLM pour discuter", 
+    "/image pour créer des images",
+    "Version 2.1 en ligne"
+]
+
+# Variable pour suivre l'index actuel
+current_status_index = 0
+
+@tasks.loop(minutes=1)  # Change le statut toutes les minutes
+async def change_status():
+    global current_status_index
+    
+    # Sélectionner le statut actuel
+    current_status = STATUSES[current_status_index]
+    
+    # Changer le statut
+    await bot.change_presence(activity=discord.Game(current_status))
+    
+    # Incrémenter l'index, revenir à 0 si on dépasse la liste
+    current_status_index = (current_status_index + 1) % len(STATUSES)
+    
+    logger.info(f"Statut changé pour : {current_status}")
 
 @bot.event
 async def on_ready():
@@ -50,10 +75,11 @@ async def on_ready():
     Événement déclenché lorsque le bot est prêt et connecté.
     Configure le statut du bot, synchronise les commandes et log la connexion.
     """
-    await bot.change_presence(activity=discord.Game(STATUS))
     logger.info(f'{bot.user} est connecté à Discord!')
     setup_commands(bot)
     await bot.tree.sync()
+    change_status.start()
+
 
 @bot.event
 async def on_message(message):

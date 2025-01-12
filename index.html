@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlphaLLM - Conditions d'utilisation et Politique de confidentialité</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --accent-color: #3498db;
+            --header-color: #2c3e50;
+            --toggle-bg: #f0f0f0;
+            --toggle-fg: #333333;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #1a1a1a;
+                --text-color: #e0e0e0;
+                --accent-color: #4fa3d1;
+                --header-color: #a0c4de;
+                --toggle-bg: #333333;
+                --toggle-fg: #f0f0f0;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: left;
+        }
+
+        h1, h2 {
+            color: var(--header-color);
+            text-align: center;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .toggle-btn, .lang-btn {
+            background-color: var(--toggle-bg);
+            color: var(--toggle-fg);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 16px;
+        }
+
+        .toggle-btn:hover, .lang-btn:hover, .toggle-btn.active, .lang-btn.active {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s forwards;
+            margin-bottom: 30px;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AlphaLLM</h1>
+        <nav>
+            <div class="toggle-container">
+                <button class="toggle-btn" id="themeToggle">
+                    <i class="fas fa-sun"></i> <span data-fr="Thème" data-en="Theme" data-de="Thema" data-es="Tema">Thème</span>
+                </button>              
+                <button class="lang-btn" id="frBtn"><img src="https://flagcdn.com/fr.svg" alt="FR" width="20"> FR</button>
+                <button class="lang-btn" id="enBtn"><img src="https://flagcdn.com/us.svg" alt="EN" width="20"> EN</button>
+                <button class="lang-btn" id="deBtn"><img src="https://flagcdn.com/de.svg" alt="DE" width="20"> DE</button>
+                <button class="lang-btn" id="esBtn"><img src="https://flagcdn.com/es.svg" alt="ES" width="20"> ES</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="tos">
+            <h2 data-fr="Conditions d'utilisation" data-en="Terms of Service" data-de="Nutzungsbedingungen" data-es="Términos de servicio">Conditions d'utilisation</h2>
+            <p data-fr="Dernière mise à jour : 12 janvier 2025" data-en="Last updated: January 12, 2025" data-de="Zuletzt aktualisiert: 12. Januar 2025" data-es="Última actualización: 12 de enero de 2025">Dernière mise à jour : 12 janvier 2025</p>
+            <p data-fr="En utilisant le bot AlphaLLM, vous acceptez les conditions suivantes :" data-en="By using the AlphaLLM bot, you agree to the following terms:" data-de="Durch die Nutzung des AlphaLLM-Bots stimmen Sie den folgenden Bedingungen zu:" data-es="Al utilizar el bot AlphaLLM, aceptas los siguientes términos:">En utilisant le bot AlphaLLM, vous acceptez les conditions suivantes :</p>
+            <ul>
+                <li data-fr="Le bot est fourni &quot;tel quel&quot;, sans garantie d'aucune sorte." data-en="The bot is provided &quot;as is&quot;, without warranty of any kind." data-de="Der Bot wird &quot;wie besehen&quot; ohne jegliche Garantie bereitgestellt." data-es="El bot se proporciona &quot;tal cual&quot;, sin garantía de ningún tipo.">Le bot est fourni "tel quel", sans garantie d'aucune sorte.</li>
+                <li data-fr="Vous vous engagez à ne pas utiliser le bot à des fins illégales ou malveillantes." data-en="You agree not to use the bot for illegal or malicious purposes." data-de="Sie verpflichten sich, den Bot nicht für illegale oder böswillige Zwecke zu verwenden." data-es="Te comprometes a no utilizar el bot con fines ilegales o malintencionados.">Vous vous engagez à ne pas utiliser le bot à des fins illégales ou malveillantes.</li>
+                <li data-fr="Nous nous réservons le droit de modifier ou de suspendre le service à tout moment." data-en="We reserve the right to modify or suspend the service at any time." data-de="Wir behalten uns das Recht vor, den Dienst jederzeit zu ändern oder auszusetzen." data-es="Nos reservamos el derecho de modificar o suspender el servicio en cualquier momento.">Nous nous réservons le droit de modifier ou de suspendre le service à tout moment.</li>
+                <li data-fr="Vous êtes responsable de toute activité effectuée avec votre compte en lien avec le bot." data-en="You are responsible for any activity performed with your account in connection with the bot." data-de="Sie sind für alle Aktivitäten verantwortlich, die mit Ihrem Konto in Verbindung mit dem Bot durchgeführt werden." data-es="Eres responsable de cualquier actividad realizada con tu cuenta en relación con el bot.">Vous êtes responsable de toute activité effectuée avec votre compte en lien avec le bot.</li>
+            </ul>
+        </section>
+
+        <section id="privacy">
+            <h2 data-fr="Politique de confidentialité" data-en="Privacy Policy" data-de="Datenschutzrichtlinie" data-es="Política de privacidad">Politique de confidentialité</h2>
+            <p data-fr="Dernière mise à jour : 12 janvier 2025" data-en="Last updated: January 12, 2025" data-de="Zuletzt aktualisiert: 12. Januar 2025" data-es="Última actualización: 12 de enero de 2025">Dernière mise à jour : 12 janvier 2025</p>
+            <p data-fr="Chez AlphaLLM Bot, nous prenons votre vie privée au sérieux. Voici comment nous traitons vos données :" data-en="At AlphaLLM Bot, we take your privacy seriously. Here's how we handle your data:" data-de="Bei AlphaLLM Bot nehmen wir Ihre Privatsphäre ernst. So gehen wir mit Ihren Daten um:" data-es="En AlphaLLM Bot, nos tomamos en serio tu privacidad. Así es como manejamos tus datos:">Chez AlphaLLM Bot, nous prenons votre vie privée au sérieux. Voici comment nous traitons vos données :</p>
+            <ul>
+                <li data-fr="Nous collectons uniquement les données nécessaires au fonctionnement du bot." data-en="We only collect data necessary for the bot's operation." data-de="Wir sammeln nur die für den Betrieb des Bots notwendigen Daten." data-es="Solo recopilamos los datos necesarios para el funcionamiento del bot.">Nous collectons uniquement les données nécessaires au fonctionnement du bot.</li>
+                <li data-fr="Les messages traités par le bot ne sont pas stockés de manière permanente." data-en="Messages processed by the bot are not permanently stored." data-de="Vom Bot verarbeitete Nachrichten werden nicht dauerhaft gespeichert." data-es="Los mensajes procesados por el bot no se almacenan de forma permanente.">Les messages traités par le bot ne sont pas stockés de manière permanente.</li>
+                <li data-fr="Nous ne partageons pas vos données avec des tiers." data-en="We do not share your data with third parties." data-de="Wir geben Ihre Daten nicht an Dritte weiter." data-es="No compartimos tus datos con terceros.">Nous ne partageons pas vos données avec des tiers.</li>
+                <li data-fr="Vous pouvez demander la suppression de vos données à tout moment." data-en="You can request the deletion of your data at any time." data-de="Sie können jederzeit die Löschung Ihrer Daten beantragen." data-es="Puedes solicitar la eliminación de tus datos en cualquier momento.">Vous pouvez demander la suppression de vos données à tout moment.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 - AlphaLLM. <span data-fr="Tous droits réservés." data-en="All rights reserved." data-de="Alle Rechte vorbehalten." data-es="Todos los derechos reservados.">Tous droits réservés.</span></p>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const frBtn = document.getElementById('frBtn');
+        const enBtn = document.getElementById('enBtn');
+        const deBtn = document.getElementById('deBtn');
+        const esBtn = document.getElementById('esBtn');
+        const root = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            root.classList.toggle('dark-theme');
+            themeToggle.classList.toggle('active');
+            updateTheme();
+        });
+
+        frBtn.addEventListener('click', () => setLanguage('fr'));
+        enBtn.addEventListener('click', () => setLanguage('en'));
+        deBtn.addEventListener('click', () => setLanguage('de'));
+        esBtn.addEventListener('click', () => setLanguage('es'));
+
+        function setLanguage(lang) {
+            document.body.className = lang;
+            updateLanguage();
+        }
+
+        function updateTheme() {
+            const isDark = root.classList.contains('dark-theme');
+            root.style.setProperty('--bg-color', isDark ? '#1a1a1a' : '#ffffff');
+            root.style.setProperty('--text-color', isDark ? '#e0e0e0' : '#333333');
+            root.style.setProperty('--accent-color', isDark ? '#4fa3d1' : '#3498db');
+            root.style.setProperty('--header-color', isDark ? '#a0c4de' : '#2c3e50');
+            root.style.setProperty('--toggle-bg', isDark ? '#333333' : '#f0f0f0');
+            root.style.setProperty('--toggle-fg', isDark ? '#f0f0f0' : '#333333');
+            themeToggle.innerHTML = isDark ? '<i class="fas fa-moon"></i> <span data-fr="Thème" data-en="Theme" data-de="Thema" data-es="Tema">Thème</span>' : '<i class="fas fa-sun"></i> <span data-fr="Thème" data-en="Theme" data-de="Thema" data-es="Tema">Thème</span>';
+        }
+
+        function updateLanguage() {
+            const currentLang = document.body.className;
+            document.querySelectorAll('[data-fr]').forEach(el => {
+                el.textContent = el.dataset[currentLang];
+            });
+            [frBtn, enBtn, deBtn, esBtn].forEach(btn => btn.classList.remove('active'));
+            document.getElementById(currentLang + 'Btn').classList.add('active');
+        }
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            root.classList.add('dark-theme');
+            themeToggle.classList.add('active');
+            updateTheme();
+        }
+
+        if (navigator.language.startsWith('en')) {
+            document.body.classList.add('en');
+            enBtn.classList.add('active');
+            updateLanguage();
+        }
+    </script>
+</body>
+</html>
