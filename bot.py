@@ -60,15 +60,15 @@ async def on_message(message):
     if not message.author.bot:
         logger.debug(f"Message reçu de {message.author}: {message.content}")
         if bot.user.mentioned_in(message):
-            response = cerebras_response(message.content)
+            response = cerebras_response(re.sub(f'<@!?{bot.user.id}>', '', message.content).strip())
             for part in split_message(response):
                 await message.channel.send(part)
             logger.info(f"Réponse envoyée dans {message.channel} à {message.author}")
         elif isinstance(message.channel, discord.DMChannel):
-            response = cerebras_response(message.content)
+            response = cerebras_response(re.sub(f'<@!?{bot.user.id}>', '', message.content).strip())
             for part in split_message(response):
                 await message.channel.send(part)
-            logger.info(f"Réponse envoyée dans {message.channel} à {message.author}")
+            logger.info(f"Réponse envoyée en MP à {message.author}")
         else:
             await bot.process_commands(message)
 
