@@ -1,6 +1,6 @@
 # Bot Discord avec IA et génération d'images
 
-### [Site Internet](https://yoanndev90.github.io/AlphaLLM/)
+### [Site Internet](https://alphallm.github.io/AlphaLLM/)
 
 ## Description
 
