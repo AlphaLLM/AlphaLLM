@@ -2,11 +2,16 @@ import discord
 from discord import app_commands
 import json
 import logging
+from dotenv import load_dotenv
+import os
 
 logger = logging.getLogger('logger_bot')
 
-with open('config.json') as config_file:
-    config = json.load(config_file)
+load_dotenv()
+config = {
+    key: os.getenv(key)
+    for key in os.environ
+}
 
 def setup_logger_commands(bot: discord.Client):
     @bot.tree.command(name="logging-level", description="Définir le niveau de log")

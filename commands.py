@@ -6,11 +6,16 @@ from discord import File
 from io import BytesIO
 import json
 import logging
+from dotenv import load_dotenv
+import os
 
 logger = logging.getLogger('discord_bot')
 
-with open('config.json') as config_file:
-    config = json.load(config_file)
+load_dotenv()
+config = {
+    key: os.getenv(key)
+    for key in os.environ
+}
 
 def setup_commands(bot: discord.Client):
     @bot.tree.command(name="ping", description="Affiche la latence du bot")

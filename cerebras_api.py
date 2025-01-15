@@ -1,8 +1,13 @@
 from cerebras.cloud.sdk import Cerebras
 import json
+from dotenv import load_dotenv
+import os
 
-with open('config.json') as config_file:
-    config = json.load(config_file)
+load_dotenv()
+config = {
+    key: os.getenv(key)
+    for key in os.environ
+}
 
 # Initialisation du client Cerebras
 cerebras_client = Cerebras(api_key=config["CEREBRAS_API_KEY"])

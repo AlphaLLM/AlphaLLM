@@ -4,6 +4,8 @@ import logging
 from discord import app_commands
 import json
 from logger_commands import setup_logger_commands
+from dotenv import load_dotenv
+import os
 
 class LoggerBot(discord.Client):
     def __init__(self):
@@ -14,13 +16,16 @@ class LoggerBot(discord.Client):
         
         self.tree = app_commands.CommandTree(self)
         
-        with open('config.json', 'r+') as config_file:
-            self.config = json.load(config_file)
-            if 'LOG_LEVEL' not in self.config:
-                self.config['LOG_LEVEL'] = 'DEBUG'
-                config_file.seek(0)
-                json.dump(self.config, config_file, indent=4)
-                config_file.truncate()
+        load_dotenv()
+        self.config = {
+            key: os.getenv(key)
+            for key in os.environ
+        }
+        if 'LOG_LEVEL' not in self.config:
+            self.config['LOG_LEVEL'] = 'DEBUG'
+            self.config.seek(0)
+            json.dump(self.config, self.config, indent=4)
+            self.config.truncate()
         
         self.dev_id = self.config['dev_ids'][0]
         self.log_level = getattr(logging, self.config['LOG_LEVEL'])

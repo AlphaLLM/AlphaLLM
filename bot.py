@@ -15,6 +15,8 @@ import json
 import asyncio
 from logger_bot import LoggerBot, DiscordHandler
 import re
+from dotenv import load_dotenv
+import os
 
 # Configuration du logging
 logger = logging.getLogger('discord_bot')
@@ -39,8 +41,11 @@ intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 # Chargement de la configuration
-with open('config.json') as config_file:
-    config = json.load(config_file)
+load_dotenv()
+config = {
+    key: os.getenv(key)
+    for key in os.environ
+}
 
 # Statut Discord modifiable
 
@@ -51,10 +56,9 @@ STATUSES = [
     "Version 2.1 en ligne"
 ]
 
-# Variable pour suivre l'index actuel
 current_status_index = 0
 
-@tasks.loop(minutes=1)  # Change le statut toutes les minutes
+@tasks.loop(seconds=15)
 async def change_status():
     global current_status_index
     
