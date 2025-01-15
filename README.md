@@ -1,5 +1,8 @@
 # Bot Discord avec IA et génération d'images
 
+### [Site Internet](https://alphallm.github.io/AlphaLLM/)
+### [Site Internet NDD à venir](https://alphallm.fr.nf)
+
 ## Description
 
 Ce projet est un bot Discord polyvalent intégrant des fonctionnalités d'IA conversationnelle et de génération d'images. Il utilise l'API Cerebras pour le traitement du langage naturel et l'API Pollinations pour la génération d'images.
