@@ -1,13 +1,14 @@
 import discord
 from discord import app_commands
 from cerebras_api import cerebras_response
-from pollinations import generate_image
+from polli_image_model import generate_image
 from discord import File
 from io import BytesIO
 import json
 import logging
 from dotenv import load_dotenv
 import os
+import random
 
 logger = logging.getLogger('discord_bot')
 
@@ -57,7 +58,6 @@ def setup_commands(bot: discord.Client):
         interaction: discord.Interaction,
         prompt: str,
         model: str = "flux",
-        seed: int = None,
         width: int = 1024,
         height: int = 1024,
         nologo: bool = True,
@@ -65,17 +65,49 @@ def setup_commands(bot: discord.Client):
         enhance: bool = False,
         safe: bool = False
     ):
-        logger.info(f"Commande image exécutée par {interaction.user} avec : \nprompt: {prompt}\nmodèle: {model} \nseed: {seed} \ndimensions: {width}x{height} \nenhance: {enhance} \nsafe: {safe}")
+        logger.info(f"Commande image exécutée par {interaction.user} avec : \nprompt: {prompt}\nmodèle: {model} \ndimensions: {width}x{height} \nenhance: {enhance} \nsafe: {safe}")
+    
         if width > 2048 or height > 2048:
             await interaction.response.send_message("Les dimensions de l'image doivent être inférieures ou égales à 2048x2048.")
             logger.error(f"Dimensions de l'image trop grandes pour {interaction.user}")
             return
-        
+
+        await interaction.response.defer()
+
+        seed = None
         image_data = await generate_image(prompt, model, seed, width, height, nologo, private, enhance, safe)
+    
         if image_data:
             file = discord.File(BytesIO(image_data), filename="generated_image.png")
-            await interaction.followup.send(file=file)
+            view = RegenerateImageView(prompt, model, width, height, nologo, private, enhance, safe)
+            await interaction.followup.send(file=file, view=view)
             logger.info(f"Image générée et envoyée à {interaction.user}")
         else:
             await interaction.followup.send("Impossible de générer l'image.")
             logger.error(f"Échec de la génération d'image pour {interaction.user}")
+
+class RegenerateImageView(discord.ui.View):
+    def __init__(self, prompt, model, width, height, nologo, private, enhance, safe):
+        super().__init__()
+        self.prompt = prompt
+        self.model = model
+        self.width = width
+        self.height = height
+        self.nologo = nologo
+        self.private = private
+        self.enhance = enhance
+        self.safe = safe
+
+    @discord.ui.button(label="Régénérer", style=discord.ButtonStyle.primary)
+    async def regenerate(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
+        seed = random.randint(0, 1000000)
+        image_data = await generate_image(self.prompt, self.model, seed, self.width, self.height, self.nologo, self.private, self.enhance, self.safe)
+        
+        if image_data:
+            file = discord.File(BytesIO(image_data), filename="regenerated_image.png")
+            await interaction.followup.send(file=file, view=self)
+            logger.info(f"Image régénérée et envoyée à {interaction.user}")
+        else:
+            await interaction.followup.send("Impossible de régénérer l'image.")
+            logger.error(f"Échec de la régénération d'image pour {interaction.user}")

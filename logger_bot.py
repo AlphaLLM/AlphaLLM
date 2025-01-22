@@ -27,7 +27,7 @@ class LoggerBot(discord.Client):
             json.dump(self.config, self.config, indent=4)
             self.config.truncate()
         
-        self.dev_id = self.config['dev_ids'][0]
+        self.dev_id = self.config['DEV_IDS']
         self.log_level = getattr(logging, self.config['LOG_LEVEL'])
         self.log_queue = asyncio.Queue()
 
