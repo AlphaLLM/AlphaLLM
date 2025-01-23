@@ -1,11 +1,10 @@
 # Bot Discord avec IA et génération d'images
 
-### [Site Internet](https://alphallm.github.io/AlphaLLM/)
-### [Site Internet NDD à venir](https://alphallm.fr.nf)
+### [Site Internet](https://alphallm.fr.nf)
 
 ## Description
 
-Ce projet est un bot Discord polyvalent intégrant des fonctionnalités d'IA conversationnelle et de génération d'images. Il utilise l'API Cerebras pour le traitement du langage naturel et l'API Pollinations pour la génération d'images.
+Ce projet est un bot Discord polyvalent intégrant des fonctionnalités d'IA conversationnelle et de génération d'images. Il utilise l'API Cerebras pour le traitement du langage naturel, ainsi que l'API de Perplexity Ai et l'API Pollinations pour la génération d'images et d'autres modèles de texte.
 
 ## Fonctionnalités principales
 
@@ -14,30 +13,15 @@ Ce projet est un bot Discord polyvalent intégrant des fonctionnalités d'IA con
 - Commandes slash pour diverses fonctionnalités
 - Système de logging avancé
 
-## Prérequis
-
-- Python 3.9+
-- Bibliothèques Python : discord.py, aiohttp, cerebras-cloud-sdk
-
 ## Installation
 
 1. Clonez ce dépôt :
 ```shell
-git clone https://github.com/YoannDev90/AlphaLLM-v2.git
+git clone https://github.com/AlphaLLM/AlphaLLM.git
 ```
 2. Installez les dépendances :
 ```shell
 pip install -r requirements.txt
-```
-3. Configurez le fichier `config.json` avec vos tokens et paramètres :
-```json
-{
-"DISCORD_TOKEN": "TOKEN DISCORD PRINCIPAL",
-"LOGGER_BOT_TOKEN": "TOKEN DISCORD LOGGING",
-"CEREBRAS_API_KEY": "CLE API CEREBRAS",
-"dev_ids": ["ID DISCORD"],
-"LOG_LEVEL": "DEBUG"
-}
 ```
 ## Utilisation
 
@@ -58,15 +42,6 @@ python bot.py
 ### Bot de logging
 - `/logging-level` : Définit le niveau de log
 - `/log-status` : Affiche le statut actuel du logger
-
-## Structure du projet
-
-- `bot.py` : Script principal du bot
-- `cerb_api.py` : Interface avec l'API Cerebras
-- `commands.py` : Définition des commandes slash
-- `pollinations.py` : Interface avec l'API Pollinations pour la génération d'images
-- `logger_bot.py` : Bot de logging
-- `logger_commands.py` : Commandes spécifiques au bot de logging
 
 ## Contribution
 
