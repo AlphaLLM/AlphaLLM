@@ -1,7 +1,7 @@
 import discord
 from discord import app_commands
-from cerebras_api import cerebras_response
-from polli_image_model import generate_image
+from AlphaLLM.utils.cerebras_api import cerebras_response
+from utils.polli_image_model import generate_image
 from discord import File
 from io import BytesIO
 import json

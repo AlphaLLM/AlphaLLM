@@ -28,6 +28,7 @@ async def generate_image(prompt, model="flux", seed=None, width=1024, height=102
                     return await response.read()
                 else:
                     logger.error(f"Erreur lors de la génération de l'image. Statut : {response.status}")
+                    await response.read()
                     return None
     except Exception as e:
         logger.error(f"Erreur lors de la génération de l'image : {e}")
