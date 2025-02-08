@@ -70,7 +70,7 @@ class Perplexity:
             cookie=cookies,
             on_open=on_open,
             on_message=on_message,
-            on_error=lambda ws, err: print(f"WebSocket error: {err}")
+            on_error=lambda ws, err: logger.error(f"WebSocket error: {err}")
         )
 
     def generate_answer(self, query: str) -> Generator[Dict[str, Any], None, None]:
@@ -97,7 +97,7 @@ async def perplexity_response(query: str) -> str:
     final_response = ""
     for answer in answers:
         try:
-            final_response = answer['answer']
+            final_response = answer
         except Exception as e:
             logger.error(f"Erreur lors de la génération de la réponse Perplexity : {e}")
             continue
