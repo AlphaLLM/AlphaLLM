@@ -3,7 +3,7 @@ import logging
 from dotenv import load_dotenv
 import os
 
-logger = logging.getLogger('discord_bot')
+logger = logging.getLogger('AlphaLLM')
 
 load_dotenv()
 config = {key: os.getenv(key) for key in os.environ}

@@ -29,7 +29,7 @@ class ColoredFormatter(logging.Formatter):
         return formatter.format(record)
 
 logger = logging.getLogger('AlphaLLM')
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
@@ -75,50 +75,55 @@ def load_roles():
     return {}
 
 def save_roles():
-    with open(ROLES_FILE, 'w') as f:
-        json.dump(role_model_mapping, f)
+    if role_model_mapping:
+        with open(ROLES_FILE, 'w') as f:
+            json.dump(role_model_mapping, f)
+        logger.info(f"Rôles sauvegardés dans {ROLES_FILE}")
+    else:
+        logger.warning("Aucun rôle à sauvegarder, role_model_mapping est vide")
 
-async def create_model_roles(bot):
+
+async def get_models():
+    with open('models.json', 'r') as f:
+        models = json.load(f)
+    return [model["name"] for model in models]
+
+async def create_model_roles(bot, guild,models):
+
     global role_model_mapping
     role_model_mapping = load_roles()
-    
-    for guild in bot.guilds:
-        logger.info(f"Vérification des rôles pour {guild.name}")
-        bot_member = guild.get_member(bot.user.id)
-    
-        models = list(await get_available_models())
-        models.extend(["perplexity", "llama 3.3 70b (fastest)"])
 
-        for model in models:
-            role_name = model.capitalize()
-            existing_role = discord.utils.get(guild.roles, name=role_name)
+    bot_member = guild.get_member(bot.user.id)
+    
+    for model in models:
+        role_name = model.capitalize()
+        existing_role = discord.utils.get(guild.roles, name=role_name)
         
-            if existing_role:
-                logger.info(f"Le rôle {role_name} existe déjà")
-                if str(existing_role.id) not in role_model_mapping:
-                    role_model_mapping[str(existing_role.id)] = model.lower()
-                if existing_role not in bot_member.roles:
-                    await bot_member.add_roles(existing_role)
-                    logger.info(f"Rôle {role_name} attribué au bot")
-            elif str(guild.id) not in role_model_mapping.get(model.lower(), {}):
-                try:
-                    new_role = await guild.create_role(
-                        name=role_name,
-                        colour=discord.Colour(0xffffff),
-                        mentionable=True
-                    )
-                    logger.info(f"Nouveau rôle créé : {role_name}")
-                    await bot_member.add_roles(new_role)
-                    logger.info(f"Rôle {role_name} attribué au bot")
-                    role_model_mapping[str(new_role.id)] = model.lower()
-                    await asyncio.sleep(ROLE_CREATION_DELAY)
-                except discord.Forbidden:
-                    logger.error(f"Permission insuffisante pour créer le rôle {role_name}")
-                except discord.HTTPException as e:
-                    logger.error(f"Erreur HTTP lors de la création du rôle {role_name}: {e}")
+        if existing_role:
+            if str(existing_role.id) not in role_model_mapping:
+                role_model_mapping[str(existing_role.id)] = model.lower()
+            if existing_role not in bot_member.roles:
+                await bot_member.add_roles(existing_role)
+                logger.info(f"Rôle {role_name} attribué au bot")
+        elif str(guild.id) not in role_model_mapping.get(model.lower(), {}):
+            try:
+                new_role = await guild.create_role(
+                    name=role_name,
+                    colour=discord.Colour(0xffffff),
+                    mentionable=True
+                )
+                logger.info(f"Nouveau rôle créé : {role_name}")
+                await bot_member.add_roles(new_role)
+                logger.info(f"Rôle {role_name} attribué au bot")
+                role_model_mapping[str(new_role.id)] = model.lower()
+                await asyncio.sleep(ROLE_CREATION_DELAY)
+            except discord.Forbidden:
+                logger.error(f"Permission insuffisante pour créer le rôle {role_name}")
+            except discord.HTTPException as e:
+                logger.error(f"Erreur HTTP lors de la création du rôle {role_name}: {e}")
 
     save_roles()
-    logger.info("Vérification et attribution des rôles terminées")
+    logger.info(f"Vérification des rôles terminée pour {guild.name}")
 
 @tasks.loop(seconds=15)
 async def change_status():
@@ -138,20 +143,13 @@ async def change_status():
 @bot.event
 async def on_ready():
     logger.info(f'{bot.user} est connecté à Discord!')
+    models = await get_models()
 
-    logger.info("Liste des serveurs où le bot est présent :")
     for guild in bot.guilds:
-        logger.info("-----------------------------------------------------")
-        logger.info(f"Nom du serveur : {guild.name}")
-        logger.info(f"ID du serveur : {guild.id}")
-        logger.info(f"Nombre de membres : {guild.member_count}")
-        logger.info(f"Date de création : {guild.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
-        logger.info(f"Lien d'invitation : { await create_invite_link(guild.text_channels[0])}")
-        logger.info(f"Propriétaire : {guild.owner} (ID: {guild.owner_id})")
+        await create_model_roles(bot, guild, models)
 
     change_status.start()
     setup_commands(bot)
-    await create_model_roles(bot)
     await bot.tree.sync()
 
 @bot.event
@@ -162,23 +160,28 @@ async def on_message(message):
         mentioned_role_ids = [str(role.id) for role in message.role_mentions if str(role.id) in role_model_mapping]
         
         if bot.user.mentioned_in(message) or mentioned_role_ids:
-            logger.info(f"Bot ou rôle mentionné par {message.author}")
-            
             if mentioned_role_ids:
                 ai_choice = role_model_mapping[mentioned_role_ids[0]]
+                logger.info(f"{ai_choice} mentionné par {message.author}")
             else:
                 ai_choice = "llama 3.3 70b (fastest)"
+                logger.info(f"{bot.user.name} mentionné par {message.author}")
             
             await process_ai_response(message, ai_choice)
 
     await bot.process_commands(message)
 
 async def process_ai_response(message, ai_choice):
-    query = message.content.replace(f'<@!{bot.user.id}>', '').strip()
+    query = message.content.replace(f'<@{bot.user.id}>', '').strip()
     for role in message.guild.me.roles:
         query = query.replace(f'<@&{role.id}>', '').strip()
+
+    if query == "":
+        await message.channel.send("Prompt vide, veuillez entrer un prompt pour obtenir une réponse.")
+        logger.warning("Prompt vide, aucune réponse envoyée")
+        return
     
-    logger.info(f"IA choisie : {ai_choice}, Query : {query}")
+    logger.info(f"Query : {query}")
     
     if ai_choice == "perplexity":
         response = await perplexity_response(query)
@@ -191,10 +194,8 @@ async def process_ai_response(message, ai_choice):
     logger.info(f"Réponse envoyée pour {ai_choice} : {response}")
 
 async def main():
-    async with asyncio.TaskGroup() as tg:
-
-        tg.create_task(bot.start(config["DISCORD_TOKEN"]))
-        logger.info("Discord bot démarré")
+    await bot.start(config["DISCORD_TOKEN"])
+    logger.info("Discord bot démarré")
 
 if __name__ == "__main__":
     asyncio.run(main())

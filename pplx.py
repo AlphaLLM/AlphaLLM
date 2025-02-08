@@ -7,12 +7,14 @@ from random import getrandbits
 from websocket import WebSocketApp
 from requests import Session
 import logging
+import json
+import asyncio
 
-logger = logging.getLogger('discord_bot')
+logger = logging.getLogger('AlphaLLM')
 
 class Perplexity:
     """
-    A client for interacting with the Perplexity AI API.
+    Un client pour interagir avec l'API Perplexity AI.
     """
     def __init__(self, *args, **kwargs) -> None:
         self.session: Session = Session()
@@ -28,7 +30,7 @@ class Perplexity:
         self.base_message_number: int = 420
         self.is_request_finished: bool = True
         self.last_request_id: str = None
-        assert (lambda: self.session.post(url=f"https://www.perplexity.ai/socket.io/?EIO=4&transport=polling&t={self.timestamp}&sid={self.session_id}", data='40{"jwt":"anonymous-ask-user"}').text == "OK")(), "Failed to ask the anonymous user."
+        assert (lambda: self.session.post(url=f"https://www.perplexity.ai/socket.io/?EIO=4&transport=polling&t={self.timestamp}&sid={self.session_id}", data='40{"jwt":"anonymous-ask-user"}').text == "OK")(), "Échec de la demande de l'utilisateur anonyme."
         self.websocket: WebSocketApp = self._initialize_websocket()
         self.websocket_thread: Thread = Thread(target=self.websocket.run_forever).start()
         while not (self.websocket.sock and self.websocket.sock.connected):
@@ -36,7 +38,7 @@ class Perplexity:
 
     def _initialize_websocket(self) -> WebSocketApp:
         """
-        Initializes the WebSocket connection.
+        Initialise la connexion WebSocket.
         """
         def on_open(ws: WebSocketApp) -> None:
             ws.send("2probe")
@@ -70,22 +72,22 @@ class Perplexity:
             cookie=cookies,
             on_open=on_open,
             on_message=on_message,
-            on_error=lambda ws, err: logger.error(f"WebSocket error: {err}")
+            on_error=lambda ws, err: logger.error(f"Erreur WebSocket : {err}")
         )
 
     def generate_answer(self, query: str) -> Generator[Dict[str, Any], None, None]:
         """
-        Generates an answer to the given query using Perplexity AI.
+        Génère une réponse à la requête donnée en utilisant Perplexity AI.
         """
         self.is_request_finished = False
         self.message_counter = (self.message_counter + 1) % 9 or self.base_message_number * 10
         self.response_queue: List[Dict[str, Any]] = []
-        self.websocket.send(str(self.base_message_number + self.message_counter) + dumps(["perplexity_ask", query, {"frontend_session_id": str(uuid4()), "language": "en-GB", "timezone": "UTC", "search_focus": "internet", "frontend_uuid": str(uuid4()), "mode": "concise"}]))
+        self.websocket.send(str(self.base_message_number + self.message_counter) + dumps(["perplexity_ask", query, {"frontend_session_id": str(uuid4()), "language": "fr-FR", "timezone": "UTC+1", "search_focus": "internet", "frontend_uuid": str(uuid4()), "mode": "concise"}]))
         start_time: float = time()
         while (not self.is_request_finished) or len(self.response_queue) != 0:
             if time() - start_time > 30:
                 self.is_request_finished = True
-                return {"error": "Timed out."}
+                return {"error": "Délai d'attente dépassé."}
             if len(self.response_queue) != 0:
                 yield self.response_queue.pop(0)
         self.websocket.close()
@@ -95,11 +97,33 @@ async def perplexity_response(query: str) -> str:
     perplexity_client = Perplexity()
     answers = perplexity_client.generate_answer(query)
     final_response = ""
+    final_json = None
+    
     for answer in answers:
         try:
-            final_response = answer
+            answer_dict = answer if isinstance(answer, dict) else json.loads(answer)
+            
+            if answer_dict.get('status') == 'completed':
+                final_json = answer_dict
+                if 'text' in answer_dict:
+                    text_dict = json.loads(answer_dict['text']) if isinstance(answer_dict['text'], str) else answer_dict['text']
+                    final_response = text_dict.get('answer', '')
+                else:
+                    final_response = answer_dict.get('answer', '')
+                
+                if final_response:
+                    logger.info(f"Réponse Perplexity générée avec succès")
+                    break
+            
+            await asyncio.sleep(0)
+                            
+        except json.JSONDecodeError as e:
+            logger.error(f"Erreur lors du décodage JSON de la réponse : {e}")
         except Exception as e:
             logger.error(f"Erreur lors de la génération de la réponse Perplexity : {e}")
-            continue
-    logger.info("Réponse Perplexity générée avec succès")
+    
+    if not final_response:
+        logger.warning("Aucune réponse valide n'a été générée")
+        final_response = "Désolé, je n'ai pas pu générer une réponse valide."
+    
     return final_response

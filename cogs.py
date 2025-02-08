@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 import os
 import random
 
-logger = logging.getLogger('discord_bot')
+logger = logging.getLogger('AlphaLLM')
 
 load_dotenv()
 config = {

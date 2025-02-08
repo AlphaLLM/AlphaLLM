@@ -1,8 +1,9 @@
 import pollinations
 import asyncio
 import logging
+import json
 
-logger = logging.getLogger('discord_bot')
+logger = logging.getLogger('AlphaLLM')
 
 async def pollinations_text_response(prompt, model):
     logger.info(f"Génération de texte Pollinations demandée avec le modèle {model}")
@@ -20,7 +21,8 @@ async def get_available_models():
     try:
         models = pollinations.Text.models()
         logger.info(f"Modèles Pollinations récupérés: {models}")
-        return models
+        model_names = [model[0] for model in models]
+        return model_names
     except Exception as e:
         logger.error(f"Erreur lors de la récupération des modèles Pollinations: {e}")
         return []
