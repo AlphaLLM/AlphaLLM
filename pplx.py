@@ -13,9 +13,6 @@ import asyncio
 logger = logging.getLogger('AlphaLLM')
 
 class Perplexity:
-    """
-    Un client pour interagir avec l'API Perplexity AI.
-    """
     def __init__(self, *args, **kwargs) -> None:
         self.session: Session = Session()
         self.request_headers: Dict[str, str] = {
@@ -37,9 +34,6 @@ class Perplexity:
             sleep(0.1)
 
     def _initialize_websocket(self) -> WebSocketApp:
-        """
-        Initialise la connexion WebSocket.
-        """
         def on_open(ws: WebSocketApp) -> None:
             ws.send("2probe")
             ws.send("5")
@@ -76,9 +70,6 @@ class Perplexity:
         )
 
     def generate_answer(self, query: str) -> Generator[Dict[str, Any], None, None]:
-        """
-        Génère une réponse à la requête donnée en utilisant Perplexity AI.
-        """
         self.is_request_finished = False
         self.message_counter = (self.message_counter + 1) % 9 or self.base_message_number * 10
         self.response_queue: List[Dict[str, Any]] = []
@@ -93,7 +84,6 @@ class Perplexity:
         self.websocket.close()
 
 async def perplexity_response(query: str) -> str:
-    logger.info("Génération de réponse Perplexity demandée")
     perplexity_client = Perplexity()
     answers = perplexity_client.generate_answer(query)
     final_response = ""
@@ -112,7 +102,6 @@ async def perplexity_response(query: str) -> str:
                     final_response = answer_dict.get('answer', '')
                 
                 if final_response:
-                    logger.info(f"Réponse Perplexity générée avec succès")
                     break
             
             await asyncio.sleep(0)

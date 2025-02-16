@@ -2,7 +2,7 @@ import aiohttp
 import logging
 import urllib.parse
 
-logger = logging.getLogger('pollinations')
+logger = logging.getLogger('AlpaLLM')
 
 async def generate_image(prompt, model="flux", seed=None, width=1024, height=1024, nologo=False, private=False, enhance=False, safe=True):
     try:
