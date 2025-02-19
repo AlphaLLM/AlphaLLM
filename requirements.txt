@@ -8,6 +8,4 @@ pollinations.ai
 colorama
 logtail-python
 PyNaCl
-gTTS
-vosk
 mysql-connector-python
